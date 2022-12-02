@@ -1,4 +1,4 @@
-package com.jseidemann.adventofcode;
+package com.jseidemann.adventofcode.day1;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,12 +8,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AdventOfCode {
+public class Day1 {
 
     public static void main(String[] args) throws IOException {
-        List<String> inputStrings = Files.readAllLines(Paths.get("adventofcode_puzzle1_input.txt"));
-
-        inputStrings.
+        List<String> inputStrings = Files.readAllLines(Paths.get("com/jseidemann/adventofcode/day1/adventofcode_puzzle1_input.txt"));
 
         List<Integer> calorieSums = new ArrayList<>();
 
