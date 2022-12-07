@@ -4,10 +4,9 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 
-object Day7Pt1 {
+object Day7 {
 
-    val systemDir: Dir = Dir("/", 0, null)
-    val allDirs: MutableList<Dir> = mutableListOf(systemDir)
+    val allDirs: MutableList<Dir> = ArrayList()
     const val MAX_SIZE = 70000000
     const val SIZE_NEEDED = 30000000
 
@@ -19,18 +18,21 @@ object Day7Pt1 {
         buildFileSystem(inputStrings)
 
         // Part 1
-//        val sumOfDirs = allDirs.stream().mapToInt(Dir::calculateSize).filter { it <= 100000 }.sum()
-//        println("Answer is $sumOfDirs")
+        val sumOfDirs = allDirs.stream().mapToInt(Dir::calculateSize).filter { it <= 100000 }.sum()
+        println("Part 1 Answer is $sumOfDirs")
 
         // Part 2
-        val sizeToClear = (systemDir.calculateSize() + SIZE_NEEDED) - MAX_SIZE
+        val sizeToClear = (allDirs[0].calculateSize() + SIZE_NEEDED) - MAX_SIZE
         val sizeOfDirToClear = allDirs.stream().mapToInt(Dir::calculateSize).filter { it >= sizeToClear }.sorted().findFirst().asInt
-        println("Answer is $sizeOfDirToClear")
+        println("Part 2 Answer is $sizeOfDirToClear")
 
     }
 
     private fun buildFileSystem(inputStrings: MutableList<String>) {
-        var currentDir: Dir = systemDir
+        val root = Dir("/", 0, null)
+        allDirs.add(root)
+
+        var currentDir: Dir = root
         for (line in inputStrings) {
             if (line.startsWith("$")) {
 
@@ -53,7 +55,7 @@ object Day7Pt1 {
 
     private fun getNewDir(line: String, currentDir: Dir): Dir {
         return when (getArgument(line)) {
-            "/" -> systemDir
+            "/" -> allDirs[0]
             ".." -> currentDir.parent!!
             else -> currentDir.entries.stream().filter { it.name == getArgument(line) }.findFirst().orElseThrow(::RuntimeException) as Dir
         }
