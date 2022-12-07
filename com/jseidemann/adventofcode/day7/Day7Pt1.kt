@@ -8,8 +8,8 @@ object Day7Pt1 {
 
     val systemDir: Dir = Dir("/", 0, null)
     val allDirs: MutableList<Dir> = mutableListOf(systemDir)
-    val MAX_SIZE = 70000000
-    val SIZE_NEEDED = 30000000
+    const val MAX_SIZE = 70000000
+    const val SIZE_NEEDED = 30000000
 
     @Throws(IOException::class)
     @JvmStatic
@@ -67,16 +67,8 @@ object Day7Pt1 {
         return line.substring(0, 2)
     }
 
-    class Dir : Entry {
-        var entries: MutableList<Entry>
-
-        constructor(name: String, size: Int, parent: Dir, files: MutableList<Entry>) : super(name, size, parent) {
-            this.entries = files
-        }
-
-        constructor(name: String, size: Int, parent: Dir?) : super(name, size, parent) {
-            this.entries = ArrayList()
-        }
+    class Dir(name: String, size: Int, parent: Dir?) : Entry(name, size, parent) {
+        var entries: MutableList<Entry> = ArrayList()
 
         override fun calculateSize(): Int {
             return entries.stream().mapToInt(Entry::calculateSize).sum()
@@ -84,11 +76,7 @@ object Day7Pt1 {
 
     }
 
-    open class Entry(name: String, size: Int, parent: Dir?) {
-        var name = name
-        var parent = parent
-        var size = size
-
+    open class Entry(var name: String, var size: Int, var parent: Dir?) {
         open fun calculateSize(): Int {
             return size
         }
