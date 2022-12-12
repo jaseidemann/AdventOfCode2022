@@ -6,9 +6,11 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
 
-object Day11 {
+object Day11pt2 {
 
     var monkeys: MutableList<Monkey> = ArrayList()
+
+    var modFactor = BigInteger.ONE
 
     @Throws(IOException::class)
     @JvmStatic
@@ -26,12 +28,14 @@ object Day11 {
         var monkeyIndex = 0
         while (inputLinesIndex < inputStrings.size) {
             monkeys[monkeyIndex].initialize(inputStrings.subList(inputLinesIndex, inputLinesIndex + 6))
+            modFactor *= monkeys[monkeyIndex].testValue!!
             inputLinesIndex += 7
             monkeyIndex++
         }
 
+        println("Mod Factor is $modFactor")
         // Perform 20 rounds
-        for (i in 0 until 20) {
+        for (i in 0 until 10000) {
             monkeys.forEach(Monkey::inspectItems)
         }
 
@@ -43,8 +47,7 @@ object Day11 {
             .map(Monkey::countedItems)
             .sorted().reversed()
             .subList(0, 2)
-
-        println("Answer is ${counts[0] * counts[1]}")
+        println("Answer is ${counts[0].times(counts[1])}")
     }
 
     class Monkey {
@@ -53,7 +56,7 @@ object Day11 {
         var testValue: BigInteger? = null
         var ifTrueMonkey: Monkey? = null
         var ifFalseMonkey: Monkey? = null
-        var countedItems = 0
+        var countedItems = BigInteger.ZERO
 
         fun initialize(input: List<String>) {
             val itemsAsStrings: List<String> = input[1].split(":")[1].replace(" ", "").split(",")
@@ -75,10 +78,10 @@ object Day11 {
 
                 // Adjust Value
                 op!!.investigate(item)
-                item.value = item.value / BigInteger.valueOf(3)
+                item.value = item.value.mod(modFactor)
 
                 // Test Item
-                if (item.value.mod(testValue!!) == BigInteger.ZERO) {
+                if (item.value.mod(testValue) == BigInteger.ZERO) {
                     iterator.remove()
                     ifTrueMonkey!!.items.add(item)
                 } else {
@@ -87,7 +90,5 @@ object Day11 {
                 }
             }
         }
-
-
     }
 }
